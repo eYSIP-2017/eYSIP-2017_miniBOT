@@ -1,4 +1,4 @@
-'use strict';		
+'use strict';   
 goog.provide('Blockly.Firebird.display');
 
 goog.require('Blockly.Firebird');
@@ -60,16 +60,6 @@ Blockly.Firebird['display_channel'] = function(block) {
       code = 'lcd_print('+ row + ',' + col + ',' + arg +',' + digit + ');\n';
   }
  
-  return code;
-};
-
-Blockly.Firebird['display_text'] = function(block) {
-  // Math operators with single operand.
-  
-  
-  
-  var arg0=block.getFieldValue('text');
-  var code = 'lcd_string("' + arg0 + '");'
   return code;
 };
 

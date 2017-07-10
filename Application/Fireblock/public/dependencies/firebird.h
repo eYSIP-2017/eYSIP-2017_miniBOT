@@ -591,7 +591,33 @@ unsigned char right_IR()
 right_IR1 = ADC_Conversion(7);
 return(right_IR1);
 }
+/*
+void xbee_init_devices()
+{
+ cli(); //Clears the global interrupts
+ uart0_init(); //Initailize UART0 for serial communiaction
+ sei();   //Enables the global interrupts
+}
 
+ISR_xbee(USART1_RX_vect ) 		// ISR for receive complete interrupt
+{
+	data = UDR0; 				//making copy of data from UDR0 in 'data' variable 
+}
+*/
+/*
+void blue_init_devices()
+{
+ cli(); //Clears the global interrupts
+ uart3_init(); //Initailize UART0 for serial communiaction
+ sei();   //Enables the global interrupts
+}
+
+ISR_blue(USART3_RX_vect ) 		// ISR for receive complete interrupt
+{
+	data1 = UDR3; 				//making copy of data from UDR0 in 'data' variable 
+}
+
+*/
 //Function to Initialize PORTS
 void port_init()
 {
@@ -626,6 +652,64 @@ timer5_init();
 left_position_encoder_interrupt_init();
 right_position_encoder_interrupt_init();
 sensor_config ();
+//xbee_init_devices();
+//blue_init_devices();
 
 sei(); //Enables the global interrupts
 }
+
+
+
+/*BLUETOOTH*/
+/*
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) |= ~_BV(bit))
+
+
+# define BAUD 9600
+#define BRC	 ((F_CPU/16/BAUD)-1)
+
+char state;
+void move(char );
+
+
+void move(char s)
+{
+	switch (s)
+	{
+		case ('F'|'f') :
+						PORTC = (1<<5)|(1<<7);
+						_delay_ms(2000);
+						PORTC = (0<<5)|(0<<7);
+						break;
+		case ( 'B'|'b'):
+						PORTC = (1<<6);
+						PORTB = (1<< 4);
+						_delay_ms(2000);
+						PORTC = (0<<6);
+						PORTB = (0<< 4);
+						break;
+						
+		case ( 'L'|'l'):
+						PORTC = (1<< 5);
+						_delay_ms(2000);
+						PORTC = (0<< 5);
+						break ;
+		case ('R' | 'r'):	
+						PORTC = (1<< 7);
+						_delay_ms(2000);
+						PORTC = (0<<7);
+						break;
+						
+		default:		//stop moving
+						PORTB = (0<<6)|(0<<5);
+						break;
+	}
+}
+
+blue_ISR(USART2_RX_vect)
+{
+	state = UDR2 ; 
+}
+
+*/

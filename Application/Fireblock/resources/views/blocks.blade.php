@@ -4,8 +4,8 @@
 <table width="100%" height="100%">
     <tr>
       <td>
-      	<h1>
-          <a href="/"><img alt="Brand" src="img/EyantraLogoLarge.png" width="170" height="40"></a>
+        <h1>
+          <a href="/"><img alt="Brand" src="img/EyantraLogoLarge.png" width="170" height="50"></a>
            <a style="visibility: hidden" id="title">...</a> 
     
         </h1>
@@ -74,7 +74,6 @@
     </category>
     <category id="catDisplay">
       <block type="display_init"></block>
-       <block type="display_text"></block>
       <block type="display_cursor"></block>
       <block type="display_channel">
         <value name="row">
@@ -93,7 +92,7 @@
       <block type="motion"></block>
       <block type="turn"></block>
       <block type="soft_turn"></block>
-      <block type="back_turn"></block>
+      <block type="back_turn"></block>      
       <block type="velocity">
         <value name="left">
           <block type="math_number">
@@ -106,6 +105,19 @@
           </block>
         </value>
       </block>
+      <block type="servomotor">
+        <value name="servo">
+          <block type="math_number">
+            <field name="NUM">90</field>
+          </block>          
+        </value>
+        <value name="servo123">
+          <block type="math_number">
+            <field name="NUM">90</field>
+          </block>          
+        </value>
+      </block>
+      <block type="motorservo"></block>
     </category>
     <category id="catPosition">
       <block type="position_motion">
@@ -181,6 +193,7 @@
       </block>
       <block type="controls_forEach"></block>
       <block type="controls_flow_statements"></block>
+      <block type="while1"></block>
     </category>
     <category id="catMath">
       <block type="math_number"></block>
@@ -271,7 +284,7 @@
     <category id="catFunctions" custom="PROCEDURE"></category>
     <category id="catInterrupts">
       <block type="int_serv_routine"><block>
-      <block type="int_signals"><block>
+      <!-- <block type="int_signals"><block> -->
     </category>
     <category id="catBasics">
       <block type="function_defnoreturn"></block>
@@ -292,6 +305,12 @@
       <block type="Initialise"></block>
       <block type="devices"></block>
     </category>
+    <category id="catCommunication">
+      <block type="xtr"></block>
+      <block type="btr"></block>
+    </category>
+    
+
     <category id="catPrecursor">
       <block type="incl_ude"></block>
       <block type="define"></block>

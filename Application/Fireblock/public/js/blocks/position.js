@@ -11,6 +11,8 @@ Blockly.Blocks['position_motion'] = {
     this.appendValueInput("motion")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_LEFT)
         .appendField(" ")
         .appendField(new Blockly.FieldDropdown([["forward", "fwd"], ["back", "back"]]), "forward")
         .appendField("distance mm");

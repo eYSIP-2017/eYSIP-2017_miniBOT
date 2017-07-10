@@ -64,7 +64,45 @@ Blockly.Firebird['devices'] = function(block) {
      Blockly.Firebird.definitions_['PWM_in_function']= 'void init_PWM(void)\n{\n\ttimer5_init();\n}\n';
     code = 'init_PWM();\n';
       break;
+      case 'servo1':
+      Blockly.Firebird.definitions_['servo1_vari']= 'unsigned char i = 0;';
+      Blockly.Firebird.definitions_['servo1_pinconfig']= 'void servo1_pin_config (void)\n\t{\n\tDDRB  = DDRB | 0x20;   \n\tPORTB = PORTB | 0x20; \n\t}';
+      Blockly.Firebird.definitions_['servo1_portinit']= 'void servo1port_init(void)\n\t{\n\t servo1_pin_config(); \n\t}';
+      Blockly.Firebird.definitions_['servo1_timer1']= 'void timer1_init(void)\n\t{\n\t TCCR1B = 0x00; \n\t TCNT1H = 0xFC; \n\t TCNT1L = 0x01; \n\t OCR1AH = 0x03; \n\t OCR1AL = 0xFF; \n\t OCR1BH = 0x03; \n\t OCR1BL = 0xFF; \n\t OCR1CH = 0x03; \n\t OCR1CL = 0xFF; \n\t ICR1H  = 0x03; \n\t ICR1L  = 0xFF;\n\t TCCR1A = 0xAB; \n\t TCCR1C = 0x00;\n\t TCCR1B = 0x0C; \n\t}';
+      Blockly.Firebird.definitions_['servo1_initdevices1']= 'void servo1_init_devices(void)\n\t{\n\t cli();\n\tservo1port_init(); \n\t timer1_init();\n\t sei(); \n\t}';
+      code = 'servo1_init_devices();\n';
+      break;
+      case 'servo2':
+      Blockly.Firebird.definitions_['servo2_vari']= 'unsigned char i = 0;';
+      Blockly.Firebird.definitions_['servo2_pinconfig']= 'void servo2_pin_config (void)\n\t{\n\tDDRB  = DDRB | 0x40;   \n\tPORTB = PORTB | 0x40; \n\t}';
+      Blockly.Firebird.definitions_['servo2_portinit']= 'void servo2port_init(void)\n\t{\n\t servo2_pin_config(); \n\t}';
+      Blockly.Firebird.definitions_['servo2_timer1']= 'void timer1_init(void)\n\t{\n\t TCCR1B = 0x00; \n\t TCNT1H = 0xFC; \n\t TCNT1L = 0x01; \n\t OCR1AH = 0x03; \n\t OCR1AL = 0xFF; \n\t OCR1BH = 0x03; \n\t OCR1BL = 0xFF; \n\t OCR1CH = 0x03; \n\t OCR1CL = 0xFF; \n\t ICR1H  = 0x03; \n\t ICR1L  = 0xFF;\n\t TCCR1A = 0xAB; \n\t TCCR1C = 0x00;\n\t TCCR1B = 0x0C; \n\t}';
+      Blockly.Firebird.definitions_['servo2_initdevices1']= 'void servo2_init_devices(void)\n\t{\n\t cli();\n\tservo2port_init(); \n\t timer1_init();\n\t sei(); \n\t}';
+      code = 'servo2_init_devices();\n';
+      break;
+      case 'servo3':
+      Blockly.Firebird.definitions_['servo3_vari']= 'unsigned char i = 0;';
+      Blockly.Firebird.definitions_['servo3_pinconfig']= 'void servo3_pin_config (void)\n\t{\n\tDDRB  = DDRB | 0x80;   \n\tPORTB = PORTB | 0x80; \n\t}';
+      Blockly.Firebird.definitions_['servo3_portinit']= 'void servo3port_init(void)\n\t{\n\t servo3_pin_config(); \n\t}';
+      Blockly.Firebird.definitions_['servo3_timer1']= 'void timer1_init(void)\n\t{\n\t TCCR1B = 0x00; \n\t TCNT1H = 0xFC; \n\t TCNT1L = 0x01; \n\t OCR1AH = 0x03; \n\t OCR1AL = 0xFF; \n\t OCR1BH = 0x03; \n\t OCR1BL = 0xFF; \n\t OCR1CH = 0x03; \n\t OCR1CL = 0xFF; \n\t ICR1H  = 0x03; \n\t ICR1L  = 0xFF;\n\t TCCR1A = 0xAB; \n\t TCCR1C = 0x00;\n\t TCCR1B = 0x0C; \n\t}';
+      Blockly.Firebird.definitions_['servo3_initdevices1']= 'void servo3_init_devices(void)\n\t{\n\t cli();\n\tservo3port_init(); \n\t timer1_init();\n\t sei(); \n\t}';
+      code = 'servo3_init_devices();\n';
+      break;
 
+      case 'xbee':
+      //Blockly.Firebird.definitions_['xbee_function']= 'volatile unsigned char data[];\n\t';
+      Blockly.Firebird.definitions_['xbee_initi']= 'void uart0_init(void)\n\t{\n\t UCSR0B = 0x00; //disable while setting baud rate\n\t UCSR0A = 0x00;\n\t UCSR0C = 0x06; \n\t UBRR0L = 0x5F; //set baud rate lo\n\t UBRR0H = 0x00; //set baud rate hi\n\t UCSR0B = 0x98;\n\t}'
+      Blockly.Firebird.definitions_['xbee_initdev']= 'void xbee_init_devices()\n\t{\n\t cli(); //Clears the global interrupts\n\t uart0_init(); //Initailize UART0 for serial communiaction\n\t sei();   //Enables the global interrupts\n\t}' 
+      code = 'xbee_init_devices();\n';
+      break;
+      
+      case 'bluetooth':
+      //Blockly.Firebird.definitions_['blue_function']= 'volatile unsigned char data1[];\n\t';
+      Blockly.Firebird.definitions_['blue_initi']= 'void uart3_init(void)\n\t{\n\t UCSR3B = 0x00; //disable while setting baud rate\n\t UCSR3A = 0x00;\n\t UCSR3C = 0x06; \n\t UBRR3L = 0x5F; //set baud rate lo\n\t UBRR3H = 0x00; //set baud rate hi\n\t UCSR3B = 0x98;\n\t}'
+      Blockly.Firebird.definitions_['blue_initdev']= 'void blue_init_devices()\n\t{\n\t cli(); //Clears the global interrupts\n\t uart3_init(); //Initailize UART3 for serial communiaction\n\t sei();   //Enables the global interrupts\n\t}'   
+      code = 'blue_init_devices();\n';    
+      break;
+      
   }
   // -4.abs() returns -4 in Firebird due to strange order of operation choices.
   // -4 is actually an operator and a number.  Reflect this in the order.
@@ -286,4 +324,3 @@ Blockly.Firebird['define'] = function(block) {
   var code ="#define "+arg0+" "+arg1+ "\n";
   return code;
 };
-

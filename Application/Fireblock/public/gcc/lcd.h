@@ -13,7 +13,7 @@
 #define cbit(reg,bit)	reg &= ~(1<<bit)		// Macro defined for Clearing a bit of any register.
 
 void init_ports();
-void lcd_reset();
+void lcd_set_4bit();
 void lcd_init();
 void lcd_wr_command(unsigned char);
 void lcd_wr_char(char);

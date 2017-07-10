@@ -65,6 +65,7 @@ class ParseController extends Controller {
 			case 'display_channel':{return $this->channel($block);break;}
 			case 'math_number':{return $this->math_number($block);break;}
 			case 'motion':{return $this->motion($block);break;}
+			case 'servomotor':{return $this->servomotor($block);break;}
 			case 'turn': {return $this->turn($block);break;}
 			case 'soft_turn':{return $this->soft_turn($block);break;}
 			case 'back_turn':{return $this->back_turn($block);break;}
@@ -80,6 +81,11 @@ class ParseController extends Controller {
 			case 'buzzer_off':{return $this->buzzer_off($block);break;}
 			case 'delay_ms':{return $this->delay_ms($block);break;}
 			case 'math_arithmetic':{return $this->math_arithmetic($block);break;}
+			case 'while1':{return $this->while1($block);break;}
+			case 'xtr':{return $this->xtr($block);break;}
+			case 'int_serv_routine':{return $this->int_serv_routine($block);break;}
+			case 'btr':{return $this->btr($block);break;}
+			case 'motorservo':{return $this->motorservo($block);break;}
 			case 'math_single':{return $this->math_single($block);break;}
 			case 'math_trig':{return $this->math_trig($block);break;}
 			case 'math_modulo':{return $this->math_modulo($block);break;}
@@ -100,8 +106,8 @@ class ParseController extends Controller {
 			case 'define':{return $this->def_ine($block);break;}
 			case 'variables_set':{return $this->variables_set($block);break;}
 			case 'variables_get':{return $this->variables_get($block);break;}
-			case 'int_serv_routine':{return $this->isRoutine($block);break;}
-			case 'int_signal':{return $this->isSignal($block);break;}
+			//case 'int_serv_routine':{return $this->isRoutine($block);break;}
+			//case 'int_signal':{return $this->isSignal($block);break;}
 			case 'devices':{return $this->devices($block);break;}
 			case 'Initialise':{return $this->Initialise($block);break;}
 			case 'io_switch':{return $this->io_switch($block);break;}
@@ -338,7 +344,9 @@ class ParseController extends Controller {
 		return "while(".$arg."){".$statements."}";
 	}
 
-
+	public function while1($block){
+		return "while(1);";
+	}
 
 	//TEXT
 	public function prints($block){
@@ -479,6 +487,30 @@ class ParseController extends Controller {
 
 		return "velocity(".$left.",".$right.");";
 	}
+
+	public function servomotor($block){
+	//	global $definitions;
+		self::$definitions['includefirebird'] = "#include \"firebird.h\"";
+		$arg1 = $this->valueToCode($block,"servo");
+		$arg2 = $this->valueToCode($block,"servo123");
+		$servo = $this->getFieldValue($block,"servo_motor");
+		switch($servo){
+			case 'servo1':{$servo = "\n\t for (i = <".$arg1."; i <".$arg2."; i++)\n\t {\n\t  servo_1(i);\n\t  _delay_ms(30);\n\t }\n\t";break;}
+			case 'servo2':{$servo = "\n\t for (i = <".$arg1."; i <".$arg2."; i++)\n\t {\n\t  servo_2(i);\n\t  _delay_ms(30);\n\t }\n\t";break;}
+			case 'servo3':{$servo = "\n\t for (i = <".$arg1."; i <".$arg2."; i++)\n\t {\n\t  servo_3(i);\n\t  _delay_ms(30);\n\t }\n\t";break;}
+		}
+		return $servo;
+	}
+	public function servomotor($block){
+	//	global $definitions;
+		self::$definitions['includefirebird'] = "#include \"firebird.h\"";
+		$servoa = $this->getFieldValue($block,"drop_servo");
+		switch($servoa){
+			case 'servo1':{$servoa = "servo_1_free();";break;}
+			case 'servo2':{$servoa = "servo_2_free();";break;}
+			case 'servo3':{$servoa = "servo_3_free();";break;}
+		}
+		return $servoa;
 
 	//POSITIONS
 	public function position_motion($block){
@@ -667,7 +699,36 @@ class ParseController extends Controller {
 	}
 
 
-	//BASICS
+	//COMM
+
+	
+	public function xtr($block){
+		self::$definitions['includefirebird'] = "#include \"firebird.h\"";
+		$xbee_trans_data = $this->valueToCode($block,"commlist3");
+		$xbee_trans_data = ($xbee_trans_data!=NULL)?$xbee_trans_data:'0';
+		$code = "tranString(".$xbee_trans_data.");";
+		return $code;
+
+	}
+	public function btr($block){
+		self::$definitions['includefirebird'] = "#include \"firebird.h\"";
+		$blue_trans_data = $this->valueToCode($block,"commlist4");
+		$blue_trans_data = ($blue_trans_data!=NULL)?$blue_trans_data:'0';
+		$code = "bluetranString(".$blue_trans_data.");";
+		return $code;
+
+	}
+	 
+	public function int_serv_routine($block){
+		self::$definitions['includefirebird'] = "#include \"firebird.h\"";
+		$vector = $this->getFieldValue($block,"VECTOR");
+		$bloc = $this->statementToCode($block,"BLOC");
+		switch($vector){
+			case 'Xbee_RX':{$vector = "ISR(USART0_RX_vect){\ndata =UDR0;\n'".$bloc."'\n}";break;}
+			case 'Bluetooth_RX':{$vector = "ISR(USART3_RX_vect){\ndata =UDR3;\n'".$bloc."'\n}";break;}
+			case 'Interrupt_switch':{$vector = "";break;}
+		}
+		return $vector;
 
 
 	public function pin($block){
@@ -894,7 +955,7 @@ class ParseController extends Controller {
 
 	public function LCD_init($block){
 
-		self::$definitions['includelcd'] = "#include \"lcd.c\"";
+		
 		$code = "lcd_init();\nlcd_set_4_bit();\n";
 
 		return $code;
@@ -993,7 +1054,7 @@ class ParseController extends Controller {
 		return $item;
 	}
 
-
+	/*
 	public function isRoutine($block){
 		$vector = $this->getFieldValue($block,"VECTOR");
 		$attribute = $this->getFieldValue($block,"ATTR");
@@ -1010,7 +1071,7 @@ class ParseController extends Controller {
 		$vector = $this->getFieldValue($block,"VECTOR");
 		$bloc = $this->statementToCode($block, "BLOC");
 		return 'SIGNAL('.$vector.'){'.$bloc.'}';
-	}
+	}*/
 
 	public function type_casting($block){
 		$type = $this->getFieldValue($block,"TYPECAST");
@@ -1057,3 +1118,4 @@ class ParseController extends Controller {
 		//return echo xmlToCode($xmlDoc);
 		}
 	}
+

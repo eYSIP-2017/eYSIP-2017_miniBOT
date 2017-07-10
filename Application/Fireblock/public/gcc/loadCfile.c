@@ -9,15 +9,23 @@
 int main() {
 
 	init_devices();
-	while(1){
-		if(((PINE & 0x80) == 0x80)){
+	
+		 unsigned char i = 0;
+		 for (i = 0; i <90; i++)
+		 {
+		  servo_1(i);
+		  _delay_ms(30);
+		 }
 		
-			buzzer_on();
-		}else{
+	_delay_ms(1000);
+	
+		 unsigned char i = 0;
+		 for (i = 0; i <90; i++)
+		 {
+		  servo_1(i);
+		  _delay_ms(30);
+		 }
 		
-			buzzer_on();
-		}
-	}
 
  return 0;
 }

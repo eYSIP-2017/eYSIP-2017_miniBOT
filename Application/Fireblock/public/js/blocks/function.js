@@ -1216,8 +1216,10 @@ Blockly.Blocks['Initialise'] = {
     this.setPreviousStatement(true, null);
     this.setColour(20);
     this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setTooltip('');
+    this.setNextStatement(true);;
+
+    this.setTooltip('');;
+
     this.setHelpUrl('http://www.example.com/');
   }
 };
@@ -1228,7 +1230,8 @@ Blockly.Blocks['devices'] = {
     this.setColour(20);
     this.appendDummyInput()
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField(new Blockly.FieldDropdown([["Buzzer", "buzz"], ["Switch", "sw"], ["Bar_graph_LEDS", "LED"],["LCD", "LCD"],["Sensors", "sen"],["Motors", "DC"],["Encoder", "enc"],["PWM", "PWM"]]), "device");
+        .appendField(new Blockly.FieldDropdown([["Buzzer", "buzz"], ["Switch", "sw"], ["Bar_graph_LEDS", "LED"],["LCD", "LCD"],["Sensors", "sen"],["Motors", "DC"],["Encoder", "enc"],["PWM", "PWM"],["Servo1","servo1"],["Servo2","servo2"],["Servo3","servo3"],["Xbee","xbee"],["Bluetooth","bluetooth"]]), "device");
+
     this.setInputsInline(true);
     this.setOutput(true, "String");
     this.setTooltip('');

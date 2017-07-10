@@ -11,6 +11,8 @@ void velocity(unsigned char, unsigned char);
 void motors_delay();
 
 
+volatile unsigned char data;
+volatile unsigned char data1;
 volatile unsigned long int ShaftCountLeft = 0; //to keep track of left position encoder
 volatile unsigned long int ShaftCountRight = 0; //to keep track of right position encoder
 volatile unsigned int Degrees; //to accept angle in degrees for turning
@@ -56,7 +58,7 @@ void timer5_init()
 }
 
 //Configure PORTB 5 pin for servo motor 1 operation
-void servo1_pin_config (void)
+/*void servo1_pin_config (void)
 {
  DDRB  = DDRB | 0x20;  //making PORTB 5 pin output
  PORTB = PORTB | 0x20; //setting PORTB 5 pin to logic 1
@@ -74,13 +76,39 @@ void servo3_pin_config (void)
 {
  DDRB  = DDRB | 0x80;  //making PORTB 7 pin output
  PORTB = PORTB | 0x80; //setting PORTB 7 pin to logic 1
-}
+}*/
+
+void servo1_pin_config (void)
+	{
+	DDRB  = DDRB | 0x20;
+	PORTB = PORTB | 0x20;
+	}
+void servo2_pin_config (void)
+	{
+	DDRB  = DDRB | 0x40;
+	PORTB = PORTB | 0x40;
+	}
+void servo3_pin_config (void)
+	{
+	DDRB  = DDRB | 0x80;
+	PORTB = PORTB | 0x80;
+	}
+
+void servo1port_init(void)
+	{
+	 servo1_pin_config();
+	}
+void servo2port_init(void)
+	{
+	 servo2_pin_config();
+	}
+
+void servo3port_init(void)
+	{
+	 servo3_pin_config();
+	}
 
 
-//TIMER1 initialization in 10 bit fast PWM mode  
-//prescale:256
-// WGM: 7) PWM 10bit fast, TOP=0x03FF
-// actual value: 52.25Hz 
 void timer1_init(void)
 {
  TCCR1B = 0x00; //stop
@@ -101,55 +129,65 @@ void timer1_init(void)
  TCCR1B = 0x0C; //WGM12=1; CS12=1, CS11=0, CS10=0 (Prescaler=256)
 }
 
-//Function to rotate Servo 1 by a specified angle in the multiples of 1.86 degrees
+void servo1_init_devices(void)
+	{
+	 cli();
+	servo1port_init();
+	 timer1_init();
+	 sei();
+	}
+void servo2_init_devices(void)
+	{
+	 cli();
+	servo2port_init();
+	 timer1_init();
+	 sei();
+	}
+void servo3_init_devices(void)
+	{
+	 cli();
+	servo3port_init();
+	 timer1_init();
+	 sei();
+	}
 void servo_1(unsigned char degrees)
-{
-	float PositionPanServo = 0;
-	PositionPanServo = ((float)degrees / 1.86) + 35.0;
-	OCR1AH = 0x00;
-	OCR1AL = (unsigned char) PositionPanServo;
-}
-
-
-//Function to rotate Servo 2 by a specified angle in the multiples of 1.86 degrees
+	{
+	 float PositionPanServo = 0;
+	  PositionPanServo = ((float)degrees / 1.86) + 35.0;
+	 OCR1AH = 0x00;
+	 OCR1AL = (unsigned char) PositionPanServo;
+	}
 void servo_2(unsigned char degrees)
-{
-	float PositionTiltServo = 0;
-	PositionTiltServo = ((float)degrees / 1.86) + 35.0;
-	OCR1BH = 0x00;
-	OCR1BL = (unsigned char) PositionTiltServo;
-}
-
-//Function to rotate Servo 3 by a specified angle in the multiples of 1.86 degrees
+	{
+	 float PositionPanServo = 0;
+	  PositionPanServo = ((float)degrees / 1.86) + 35.0;
+	 OCR1BH = 0x00;
+	 OCR1BL = (unsigned char) PositionPanServo;
+	}
 void servo_3(unsigned char degrees)
-{
-	float PositionServo = 0;
-	PositionServo = ((float)degrees / 1.86) + 35.0;
-	OCR1CH = 0x00;
-	OCR1CL = (unsigned char) PositionServo;
-}
+	{
+	 float PositionPanServo = 0;
+	  PositionPanServo = ((float)degrees / 1.86) + 35.0;
+	 OCR1CH = 0x00;
+	 OCR1CL = (unsigned char) PositionPanServo;
+	}
+void servo_1_free (void)
+	{
+	 OCR1AH = 0x03;
+	 OCR1AL = 0xFF;
+	}
+void servo_2_free (void)
+	{
+	 OCR1BH = 0x03;
+	 OCR1BL = 0xFF;
+	}
+void servo_3_free (void)
+	{
+	 OCR1CH = 0x03;
+	 OCR1CL = 0xFF;
+	}
 
-//servo_free functions unlocks the servo motors from the any angle
-//and make them free by giving 100% duty cycle at the PWM. This function can be used to
-//reduce the power consumption of the motor if it is holding load against the gravity.
 
-void servo_1_free (void) //makes servo 1 free rotating
-{
-	OCR1AH = 0x03;
-	OCR1AL = 0xFF; //Servo 1 off
-}
-
-void servo_2_free (void) //makes servo 2 free rotating
-{
-	OCR1BH = 0x03;
-	OCR1BL = 0xFF; //Servo 2 off
-}
-
-void servo_3_free (void) //makes servo 3 free rotating
-{
-	OCR1CH = 0x03;
-	OCR1CL = 0xFF; //Servo 3 off
-}
 void motion_pin_config (void)
 {
 	DDRA = DDRA | 0x0F; //set direction of the PORTA 3 to PORTA 0 pins as output
@@ -328,9 +366,6 @@ unsigned char ADC_Conversion(unsigned char Ch)
 	ADCSRB = 0x00;
 	return a;
 }
-
-
-
 // This Function prints the Analog Value Of Corresponding Channel No. at required Row
 // and Coloumn Location.
 void print_sensor(char row, char coloumn,unsigned char channel)
@@ -338,8 +373,6 @@ void print_sensor(char row, char coloumn,unsigned char channel)
 	ADC_Value = ADC_Conversion(channel);
 	lcd_print(row, coloumn, ADC_Value, 3);
 }
-
-
 // This Function calculates the actual distance in millimeters(mm) from the input
 // analog value of Sharp Sensor.
 unsigned int Sharp_GP2D12_estimation(unsigned char adc_reading)
@@ -354,9 +387,6 @@ unsigned int Sharp_GP2D12_estimation(unsigned char adc_reading)
 	}
 	return distanceInt;
 }
-
-
-
 void turn_on_sharp234_wl (void) //turn on Sharp IR range sensors 2, 3, 4 and white line sensor's red LED
 {
   PORTG = PORTG & 0xFB;
@@ -402,8 +432,6 @@ void turn_off_all_proxy_sensors (void) // turn off Sharp 2, 3, 4, red LED of the
 }
 
 //-------------------------Encoders
-
-
 //Function to configure INT4 (PORTE 4) pin as input for the left position encoder
 void left_encoder_pin_config (void)
 {
@@ -417,8 +445,6 @@ void right_encoder_pin_config (void)
 	DDRE  = DDRE & 0xDF;  //Set the direction of the PORTE 4 pin as input
 	PORTE = PORTE | 0x20; //Enable internal pull-up for PORTE 4 pin
 }
-
-
 void left_position_encoder_interrupt_init (void) //Interrupt 4 enable
 {
 	cli(); //Clears the global interrupt
@@ -584,6 +610,66 @@ unsigned char right_IR()
 right_IR1 = ADC_Conversion(7);
 return(right_IR1);
 }
+// Communication
+void uart0_init(void)
+{
+ UCSR0B = 0x00; //disable while setting baud rate
+ UCSR0A = 0x00;
+ UCSR0C = 0x06;
+ UBRR0L = 0x5F; //set baud rate lo
+ UBRR0H = 0x00; //set baud rate hi
+ UCSR0B = 0x98;
+}
+void xbee_init_devices()
+{
+ cli(); //Clears the global interrupts
+ uart0_init(); //Initailize UART0 for serial communiaction
+ sei();   //Enables the global interrupts
+}
+void uart3_init(void)
+{
+ UCSR3B = 0x00; //disable while setting baud rate
+ UCSR3A = 0x00;
+ UCSR3C = 0x06;
+ UBRR3L = 0x5F; //set baud rate lo
+ UBRR3H = 0x00; //set baud rate hi
+ UCSR3B = 0x98;
+}
+void blue_init_devices()
+{
+ cli(); //Clears the global interrupts
+ uart3_init(); //Initailize UART0 for serial communiaction
+ sei();   //Enables the global interrupts
+}
+
+void tranString(char * data)
+{
+  int k=0;
+  while(data[k])
+  {
+    uartTransmit(data[k++]);
+  }
+}
+void uartTransmit(unsigned int data)
+{
+  while (!( UCSR0A & (1<<UDRE0)));// wait while register is free
+  UDR0 = data;                  // load data in the register
+}
+
+void bluetranString(char * data1)
+{
+  int k=0;
+  while(data1[k])
+  {
+    uartTransmit(data1[k++]);
+  }
+}
+void blueuartTransmit(unsigned int data1)
+{
+  while (!( UCSR0A & (1<<UDRE0)));// wait while register is free
+  UDR0 = data1;                  // load data in the register
+}
+
 
 //Function to Initialize PORTS
 void port_init()
@@ -592,9 +678,12 @@ void port_init()
 	adc_pin_config();
 	MOSFET_switch_config();
 	motion_pin_config();
-	servo1_pin_config(); //Configure PORTB 5 pin for servo motor 1 operation
-	servo2_pin_config(); //Configure PORTB 6 pin for servo motor 2 operation
-	servo3_pin_config(); //Configure PORTB 7 pin for servo motor 3 operation
+	servo1_init_devices();
+	servo2_init_devices();
+	servo3_init_devices();
+	servo_1_free ();
+	servo_2_free ();
+	servo_3_free ();
 	buzzer_pin_config();
 	motion_pin_config(); //robot motion pins config
 	left_encoder_pin_config(); //left encoder pin config
@@ -609,8 +698,10 @@ void init_devices (void)
 {
 cli(); //Clears the global interrupts
 port_init();
-lcd_set_4bit();
+//lcd_set_4bit();
 lcd_init();
+xbee_init_devices();
+blue_init_devices();
 adc_init();
 timer1_init();
 timer4_init();
@@ -618,6 +709,5 @@ timer5_init();
 left_position_encoder_interrupt_init();
 right_position_encoder_interrupt_init();
 sensor_config ();
-
 sei(); //Enables the global interrupts
 }

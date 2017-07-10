@@ -70,3 +70,33 @@ Blockly.Blocks['velocity'] = {
     this.setHelpUrl('http://www.example.com/');
   }
 };
+Blockly.Blocks['servomotor'] = {
+  init: function() {
+    this.appendValueInput("servo")
+        .setCheck("Number")
+        .appendField(new Blockly.FieldDropdown([["servo1","servo1"], ["servo2","servo2"], ["servo3","servo3"]]), "servo_motor");
+    this.appendValueInput("servo123")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(290);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  }
+};
+
+Blockly.Blocks['motorservo'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([["servo1","servo1"], ["servo2","servo2"], ["servo3","servo3"]]), "drop_servo")
+        .appendField("Free");
+    this.setInputsInline(false);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(290);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  }
+};

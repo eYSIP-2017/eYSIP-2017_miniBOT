@@ -38,7 +38,7 @@ Blockly.Firebird['controls_repeat'] = function(block) {
       'count', Blockly.Variables.NAME_TYPE);
   var code = 'for (int ' + loopVar + ' = 0; ' +
       loopVar + ' < ' + repeats + '; ' +
-      loopVar + '++) {\n' +
+      loopVar + '++) {\n' +r
       branch + '}\n';
   return code;
 };
@@ -166,4 +166,9 @@ Blockly.Firebird['controls_flow_statements'] = function(block) {
       return 'continue;\n';
   }
   throw 'Unknown flow statement.';
+};
+Blockly.Firebird['while1'] = function(block) {
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'while(1);\n';
+  return code;
 };

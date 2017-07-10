@@ -39,3 +39,40 @@ Blockly.Blocks['sensor_ir'] = {
     this.setTooltip('');
   }
 };
+Blockly.Blocks['sensor_tsop'] = {
+  init: function() {
+    this.appendDummyInput()
+        //.setAlign(Blockly.ALIGN_CENTRE)
+        .appendField("TSOP");
+    this.setInputsInline(false);
+    this.setOutput(true, null);
+    this.setColour(20);
+    this.setTooltip('Press remote button');
+    this.setHelpUrl('');
+  }
+};
+/*
+Blockly.Blocks['sensor_xbee'] = {
+  init: function() {
+    this.appendDummyInput()
+        //.setAlign(Blockly.ALIGN_CENTRE)
+        .appendField("XBEE");
+    this.setInputsInline(false);
+    this.setOutput(true, null);
+    this.setColour(20);
+    this.setHelpUrl('');
+  }
+};
+
+Blockly.Blocks['sensor_bluetooth'] = {
+  init: function() {
+    this.appendDummyInput()
+        //.setAlign(Blockly.ALIGN_CENTRE)
+        .appendField("BLUETOOTH");
+    this.setInputsInline(false);
+    this.setOutput(true, null);
+    this.setColour(20);
+    this.setTooltip('Switch on Bluetooth');
+    this.setHelpUrl('');
+  }
+};*/

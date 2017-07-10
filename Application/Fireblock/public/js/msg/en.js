@@ -18,6 +18,7 @@ var MSG = {
   catLoops: "Loops",
   catMath: "Math",
   catText: "Text",
+  catCommunication: "Comm",
   
  
   catVariables: "Variables",
