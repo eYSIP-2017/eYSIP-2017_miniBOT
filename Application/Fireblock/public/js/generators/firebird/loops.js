@@ -169,6 +169,6 @@ Blockly.Firebird['controls_flow_statements'] = function(block) {
 };
 Blockly.Firebird['while1'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
-  var code = 'while(1);\n';
+  var code = '\nwhile(1);\n';
   return code;
 };
