@@ -2,7 +2,7 @@
  * @license
  * Visual Blocks Language
  *
- * Copyright 2014 Google Inc.
+ * Copyright 2012 Google Inc.
  * https://developers.google.com/blockly/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,78 +19,78 @@
  */
 
 /**
- * @fileoverview Generating Firebird for loop blocks.
+ * @fileoverview Generating JavaScript for loop blocks.
  * @author fraser@google.com (Neil Fraser)
  */
 'use strict';
 
-goog.provide('Blockly.Firebird.loops');
+goog.provide('Blockly.JavaScript.loops');
 
-goog.require('Blockly.Firebird');
+goog.require('Blockly.JavaScript');
 
 
-Blockly.Firebird['controls_repeat'] = function(block) {
+Blockly.JavaScript['controls_repeat'] = function(block) {
   // Repeat n times (internal number).
   var repeats = Number(block.getFieldValue('TIMES'));
-  var branch = Blockly.Firebird.statementToCode(block, 'DO');
-  branch = Blockly.Firebird.addLoopTrap(branch, block.id);
-  var loopVar = Blockly.Firebird.variableDB_.getDistinctName(
+  var branch = Blockly.JavaScript.statementToCode(block, 'DO');
+  branch = Blockly.JavaScript.addLoopTrap(branch, block.id);
+  var loopVar = Blockly.JavaScript.variableDB_.getDistinctName(
       'count', Blockly.Variables.NAME_TYPE);
-  var code = 'for (int ' + loopVar + ' = 0; ' +
+  var code = 'for (var ' + loopVar + ' = 0; ' +
       loopVar + ' < ' + repeats + '; ' +
-      loopVar + '++) {\n' +r
+      loopVar + '++) {\n' +
       branch + '}\n';
   return code;
 };
 
-Blockly.Firebird['controls_repeat_ext'] = function(block) {
+Blockly.JavaScript['controls_repeat_ext'] = function(block) {
   // Repeat n times (external number).
-  var repeats = Blockly.Firebird.valueToCode(block, 'TIMES',
-      Blockly.Firebird.ORDER_ASSIGNMENT) || '0';
-  var branch = Blockly.Firebird.statementToCode(block, 'DO');
-  branch = Blockly.Firebird.addLoopTrap(branch, block.id);
+  var repeats = Blockly.JavaScript.valueToCode(block, 'TIMES',
+      Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
+  var branch = Blockly.JavaScript.statementToCode(block, 'DO');
+  branch = Blockly.JavaScript.addLoopTrap(branch, block.id);
   var code = '';
-  var loopVar = Blockly.Firebird.variableDB_.getDistinctName(
+  var loopVar = Blockly.JavaScript.variableDB_.getDistinctName(
       'count', Blockly.Variables.NAME_TYPE);
   var endVar = repeats;
   if (!repeats.match(/^\w+$/) && !Blockly.isNumber(repeats)) {
-    var endVar = Blockly.Firebird.variableDB_.getDistinctName(
+    var endVar = Blockly.JavaScript.variableDB_.getDistinctName(
         'repeat_end', Blockly.Variables.NAME_TYPE);
     code += 'var ' + endVar + ' = ' + repeats + ';\n';
   }
-  code += 'for (int ' + loopVar + ' = 0; ' +
+  code += 'for (var ' + loopVar + ' = 0; ' +
       loopVar + ' < ' + endVar + '; ' +
       loopVar + '++) {\n' +
       branch + '}\n';
   return code;
 };
 
-Blockly.Firebird['controls_whileUntil'] = function(block) {
+Blockly.JavaScript['controls_whileUntil'] = function(block) {
   // Do while/until loop.
   var until = block.getFieldValue('MODE') == 'UNTIL';
-  var argument0 = Blockly.Firebird.valueToCode(block, 'BOOL',
-      until ? Blockly.Firebird.ORDER_UNARY_PREFIX :
-      Blockly.Firebird.ORDER_NONE) || '0';
-  var branch = Blockly.Firebird.statementToCode(block, 'DO');
-  branch = Blockly.Firebird.addLoopTrap(branch, block.id);
+  var argument0 = Blockly.JavaScript.valueToCode(block, 'BOOL',
+      until ? Blockly.JavaScript.ORDER_LOGICAL_NOT :
+      Blockly.JavaScript.ORDER_NONE) || 'false';
+  var branch = Blockly.JavaScript.statementToCode(block, 'DO');
+  branch = Blockly.JavaScript.addLoopTrap(branch, block.id);
   if (until) {
     argument0 = '!' + argument0;
   }
   return 'while (' + argument0 + ') {\n' + branch + '}\n';
 };
 
-Blockly.Firebird['controls_for'] = function(block) {
+Blockly.JavaScript['controls_for'] = function(block) {
   // For loop.
-  var variable0 = Blockly.Firebird.variableDB_.getName(
+  var variable0 = Blockly.JavaScript.variableDB_.getName(
       block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
-  var argument0 = Blockly.Firebird.valueToCode(block, 'FROM',
-      Blockly.Firebird.ORDER_ASSIGNMENT) || '0';
-  var argument1 = Blockly.Firebird.valueToCode(block, 'TO',
-      Blockly.Firebird.ORDER_ASSIGNMENT) || '0';
-  var increment = Blockly.Firebird.valueToCode(block, 'BY',
-      Blockly.Firebird.ORDER_ASSIGNMENT) || '1';
-  var branch = Blockly.Firebird.statementToCode(block, 'DO');
-  branch = Blockly.Firebird.addLoopTrap(branch, block.id);
+  var argument0 = Blockly.JavaScript.valueToCode(block, 'FROM',
+      Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
+  var argument1 = Blockly.JavaScript.valueToCode(block, 'TO',
+      Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
+  var increment = Blockly.JavaScript.valueToCode(block, 'BY',
+      Blockly.JavaScript.ORDER_ASSIGNMENT) || '1';
+  var branch = Blockly.JavaScript.statementToCode(block, 'DO');
+  branch = Blockly.JavaScript.addLoopTrap(branch, block.id);
   var code;
   if (Blockly.isNumber(argument0) && Blockly.isNumber(argument1) &&
       Blockly.isNumber(increment)) {
@@ -111,28 +111,28 @@ Blockly.Firebird['controls_for'] = function(block) {
     // Cache non-trivial values to variables to prevent repeated look-ups.
     var startVar = argument0;
     if (!argument0.match(/^\w+$/) && !Blockly.isNumber(argument0)) {
-      var startVar = Blockly.Firebird.variableDB_.getDistinctName(
+      startVar = Blockly.JavaScript.variableDB_.getDistinctName(
           variable0 + '_start', Blockly.Variables.NAME_TYPE);
       code += 'var ' + startVar + ' = ' + argument0 + ';\n';
     }
     var endVar = argument1;
     if (!argument1.match(/^\w+$/) && !Blockly.isNumber(argument1)) {
-      var endVar = Blockly.Firebird.variableDB_.getDistinctName(
+      var endVar = Blockly.JavaScript.variableDB_.getDistinctName(
           variable0 + '_end', Blockly.Variables.NAME_TYPE);
       code += 'var ' + endVar + ' = ' + argument1 + ';\n';
     }
     // Determine loop direction at start, in case one of the bounds
     // changes during loop execution.
-    var incVar = Blockly.Firebird.variableDB_.getDistinctName(
+    var incVar = Blockly.JavaScript.variableDB_.getDistinctName(
         variable0 + '_inc', Blockly.Variables.NAME_TYPE);
-    code += 'num ' + incVar + ' = ';
+    code += 'var ' + incVar + ' = ';
     if (Blockly.isNumber(increment)) {
       code += Math.abs(increment) + ';\n';
     } else {
-      code += '(' + increment + ').abs();\n';
+      code += 'Math.abs(' + increment + ');\n';
     }
     code += 'if (' + startVar + ' > ' + endVar + ') {\n';
-    code += Blockly.Firebird.INDENT + incVar + ' = -' + incVar + ';\n';
+    code += Blockly.JavaScript.INDENT + incVar + ' = -' + incVar + ';\n';
     code += '}\n';
     code += 'for (' + variable0 + ' = ' + startVar + ';\n' +
         '     ' + incVar + ' >= 0 ? ' +
@@ -144,20 +144,31 @@ Blockly.Firebird['controls_for'] = function(block) {
   return code;
 };
 
-Blockly.Firebird['controls_forEach'] = function(block) {
+Blockly.JavaScript['controls_forEach'] = function(block) {
   // For each loop.
-  var variable0 = Blockly.Firebird.variableDB_.getName(
+  var variable0 = Blockly.JavaScript.variableDB_.getName(
       block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
-  var argument0 = Blockly.Firebird.valueToCode(block, 'LIST',
-      Blockly.Firebird.ORDER_ASSIGNMENT) || '[]';
-  var branch = Blockly.Firebird.statementToCode(block, 'DO');
-  branch = Blockly.Firebird.addLoopTrap(branch, block.id);
-  var code = 'for (var ' + variable0 + ' in  ' + argument0 + ') {\n' +
-      branch + '}\n';
+  var argument0 = Blockly.JavaScript.valueToCode(block, 'LIST',
+      Blockly.JavaScript.ORDER_ASSIGNMENT) || '[]';
+  var branch = Blockly.JavaScript.statementToCode(block, 'DO');
+  branch = Blockly.JavaScript.addLoopTrap(branch, block.id);
+  var code = '';
+  // Cache non-trivial values to variables to prevent repeated look-ups.
+  var listVar = argument0;
+  if (!argument0.match(/^\w+$/)) {
+    listVar = Blockly.JavaScript.variableDB_.getDistinctName(
+        variable0 + '_list', Blockly.Variables.NAME_TYPE);
+    code += 'var ' + listVar + ' = ' + argument0 + ';\n';
+  }
+  var indexVar = Blockly.JavaScript.variableDB_.getDistinctName(
+      variable0 + '_index', Blockly.Variables.NAME_TYPE);
+  branch = Blockly.JavaScript.INDENT + variable0 + ' = ' +
+      listVar + '[' + indexVar + '];\n' + branch;
+  code += 'for (var ' + indexVar + ' in ' + listVar + ') {\n' + branch + '}\n';
   return code;
 };
 
-Blockly.Firebird['controls_flow_statements'] = function(block) {
+Blockly.JavaScript['controls_flow_statements'] = function(block) {
   // Flow statements: continue, break.
   switch (block.getFieldValue('FLOW')) {
     case 'BREAK':
@@ -166,9 +177,4 @@ Blockly.Firebird['controls_flow_statements'] = function(block) {
       return 'continue;\n';
   }
   throw 'Unknown flow statement.';
-};
-Blockly.Firebird['while1'] = function(block) {
-  // TODO: Assemble JavaScript into code variable.
-  var code = 'while(1);\n';
-  return code;
 };
